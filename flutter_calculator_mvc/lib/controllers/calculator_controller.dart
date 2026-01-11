@@ -1,4 +1,4 @@
-import '../models/calculator_model.dart';
+import '../../../models/calculator_model.dart';
 
 class CalculatorController {
   final CalculatorModel _model = CalculatorModel();
