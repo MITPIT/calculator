@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../controllers/calculator_controller.dart';
-import 'converter_view.dart'; // Fixed path based on standard lib structure
+import 'converter_view.dart';
 import 'history_view.dart';
 
 class CalculatorView extends StatefulWidget {
@@ -10,67 +10,95 @@ class CalculatorView extends StatefulWidget {
 
 class _CalculatorViewState extends State<CalculatorView> {
   final CalculatorController _controller = CalculatorController();
-  final TextEditingController _firstController = TextEditingController();
-  final TextEditingController _secondController = TextEditingController();
-  String _operation = '+';
+  // We use one controller for the entire equation string
+  final TextEditingController _equationController = TextEditingController();
   String _result = '';
 
   void _calculate() {
+    if (_equationController.text.isEmpty) return;
+
     try {
-      final double a = double.parse(_firstController.text);
-      final double b = double.parse(_secondController.text);
-      final double res = _controller.calculate(a, b, _operation);
-      setState(() => _result = res.toString());
+      // Pass the whole string (e.g., "5+6/2") to the controller
+      final double res = _controller.calculate(_equationController.text);
+      setState(() {
+        _result = res.toString();
+      });
     } catch (e) {
-      setState(() => _result = 'Error: ${e.toString()}');
+      setState(() {
+        _result = 'Error: Invalid Equation';
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('MVC Calculator')),
+      appBar: AppBar(
+        title: const Text('MVC Equation Calculator'),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             children: [
+              // The main Equation Input
               TextField(
-                controller: _firstController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'First number'),
-              ),
-              TextField(
-                controller: _secondController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Second number'),
-              ),
-              DropdownButton<String>(
-                value: _operation,
-                items: ['+', '-', '*', '/']
-                    .map((op) => DropdownMenuItem(value: op, child: Text(op)))
-                    .toList(),
-                onChanged: (value) => setState(() => _operation = value!),
+                controller: _equationController,
+                keyboardType: TextInputType.text,
+                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                decoration: InputDecoration(
+                  labelText: 'Enter Equation',
+                  hintText: 'e.g., 5 + 6 / 2',
+                  border: const OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.backspace_outlined),
+                    onPressed: () => _equationController.clear(),
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _calculate, 
-                child: const Text('Calculate')
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Result: $_result', 
-                style: const TextStyle(fontSize: 20)
-              ),
-              const SizedBox(height: 60),
-              const Divider(),
               
-              // Unit Converter Link
+              // Calculate Button
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: _calculate,
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white),
+                  child: const Text('=', style: TextStyle(fontSize: 24)),
+                ),
+              ),
+              const SizedBox(height: 30),
+              
+              // Result Display
+              Container(
+                padding: const EdgeInsets.all(20),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const Text('Result', style: TextStyle(color: Colors.grey)),
+                    Text(
+                      _result,
+                      style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+              
+              const SizedBox(height: 40),
+              const Divider(thickness: 2),
+              
+              // Navigation Menu
               ListTile(
-                leading: const Icon(Icons.swap_horiz),
+                leading: const Icon(Icons.swap_horiz, color: Colors.orange),
                 title: const Text("Unit Converter"),
-                subtitle: const Text("Convert Kilometers to Miles"),
+                subtitle: const Text("Kilometers to Miles"),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                 onTap: () {
                   Navigator.push(
@@ -79,17 +107,14 @@ class _CalculatorViewState extends State<CalculatorView> {
                   );
                 },
               ),
-              
-              // History Link
               ListTile(
-                leading: const Icon(Icons.history),
+                leading: const Icon(Icons.history, color: Colors.blue),
                 title: const Text('View History'),
-                subtitle: const Text("Recent calculations"),
+                subtitle: const Text("Recent equations & results"),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                 onTap: () {
                   Navigator.push(
                     context, 
-                    // No 'const' before MaterialPageRoute
                     MaterialPageRoute(builder: (context) => HistoryView()),
                   );
                 },
