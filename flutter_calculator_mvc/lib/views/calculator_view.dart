@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../controllers/calculator_controller.dart';
-import '../../../views/converter_view.dart';
+import 'converter_view.dart'; // Fixed path based on standard lib structure
+import 'history_view.dart';
 
 class CalculatorView extends StatefulWidget {
   @override
@@ -28,7 +29,7 @@ class _CalculatorViewState extends State<CalculatorView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('MVC Calculator')),
+      appBar: AppBar(title: const Text('MVC Calculator')),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -38,12 +39,12 @@ class _CalculatorViewState extends State<CalculatorView> {
               TextField(
                 controller: _firstController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'First number'),
+                decoration: const InputDecoration(labelText: 'First number'),
               ),
               TextField(
                 controller: _secondController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'Second number'),
+                decoration: const InputDecoration(labelText: 'Second number'),
               ),
               DropdownButton<String>(
                 value: _operation,
@@ -52,26 +53,44 @@ class _CalculatorViewState extends State<CalculatorView> {
                     .toList(),
                 onChanged: (value) => setState(() => _operation = value!),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _calculate, 
-                child: Text('Calculate')
+                child: const Text('Calculate')
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 'Result: $_result', 
-                style: TextStyle(fontSize: 20)
+                style: const TextStyle(fontSize: 20)
               ),
-              SizedBox(height: 60),
-              Divider(),
+              const SizedBox(height: 60),
+              const Divider(),
+              
+              // Unit Converter Link
               ListTile(
-                title: Text("Unit Converter"),
-                subtitle: Text("Convert Kilometers to Miles"),
-                trailing: Icon(Icons.arrow_forward_ios, size: 16),
+                leading: const Icon(Icons.swap_horiz),
+                title: const Text("Unit Converter"),
+                subtitle: const Text("Convert Kilometers to Miles"),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => ConverterView()),
+                  );
+                },
+              ),
+              
+              // History Link
+              ListTile(
+                leading: const Icon(Icons.history),
+                title: const Text('View History'),
+                subtitle: const Text("Recent calculations"),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () {
+                  Navigator.push(
+                    context, 
+                    // No 'const' before MaterialPageRoute
+                    MaterialPageRoute(builder: (context) => HistoryView()),
                   );
                 },
               ),
