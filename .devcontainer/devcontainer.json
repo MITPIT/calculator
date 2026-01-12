@@ -1,0 +1,13 @@
+{
+    "name": "Flutter Automated",
+    "image": "ghcr.io/cirruslabs/flutter:stable",
+    "customizations": {
+        "vscode": {
+            "extensions": ["Dart-Code.flutter"]
+        }
+    },
+    // This runs automatically every time a new codespace is created
+    "postCreateCommand": "flutter pub get && flutter clean",
+    "forwardPorts": [8081],
+    "remoteUser": "root"
+}
