@@ -8,8 +8,7 @@
             "args": [
                 "-d", "web-server",
                 "--web-hostname", "0.0.0.0",
-                "--web-port", "8081",
-                "--web-renderer", "html"
+                "--web-port", "8080"
             ]
         }
     ]
