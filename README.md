@@ -1,16 +1,24 @@
-# flutter_calculator_mvc
+# Flutter Calculator
 
-A new Flutter project.
+## Steps to run
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Press **Code** > **Codespaces**
+2. **Create codespace on main**
+3. Wait for the installs
+4. Write in the terminal:
+```bash
+git clone https://github.com/flutter/flutter.git -b stable
+```
+```bash
+export PATH="$PATH:`pwd`/flutter/bin"
+```
+```bash
+flutter doctor
+```
+```bash
+flutter pub get
+```
+```bash
+flutter run -d web-server --web-hostname 0.0.0.0 --web-port 8080
+```
+5. Press **Open in Browser**
